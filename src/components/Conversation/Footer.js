@@ -30,6 +30,7 @@ const Footer = () => {
             ? "#F8FAFF"
             : theme.palette.background.paper,
         boxShadow: "0px 0px 2px rgba(0, 0, 0, 0.25)",
+        height: "75px",
       }}
       p={2}
     >
@@ -41,14 +42,14 @@ const Footer = () => {
           InputProps={{
             disableUnderline: true,
             startAdornment: (
-              <InputAdornment>
+              <InputAdornment position="start">
                 <IconButton>
                   <LinkSimple />
                 </IconButton>
               </InputAdornment>
             ),
             endAdornment: (
-              <InputAdornment>
+              <InputAdornment position="end">
                 <IconButton>
                   <Smiley />
                 </IconButton>

@@ -169,12 +169,8 @@ const Chats = () => {
           <Divider />
         </Stack>
         {/* Chat */}
-        <SimpleBar style={{ maxHeight: "70vh" }}>
-          <Stack
-            direction={"column"}
-            spacing={2}
-            sx={{ flexGrow: 1, height: "100%" }}
-          >
+        <SimpleBar style={{ height: "calc(100vh - 210px)" }}>
+          <Stack direction={"column"} spacing={2} sx={{ flexGrow: 1 }}>
             {/* Pinned Chats */}
             <Stack spacing={2.4}>
               <Typography variant="subtitle2" sx={{ color: "#676767" }}>
