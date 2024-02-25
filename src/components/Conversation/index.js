@@ -13,7 +13,7 @@ const Conversation = () => {
       {/* Msg */}
       <SimpleBar style={{ height: "calc(100vh - 145px)" }}>
         <Box sx={{ width: "100%", flexGrow: 1 }}>
-          <Message />
+          <Message menu={true}/>
         </Box>
       </SimpleBar>
       {/* Chat Footer */}

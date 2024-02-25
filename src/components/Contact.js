@@ -1,15 +1,18 @@
-import { Box, IconButton, Stack, Typography, Avatar, Divider, Button } from '@mui/material'
-import React from 'react'
-import { useTheme } from "@mui/material/styles"
-import { Phone, X, VideoCamera, CaretRight, Star, Bell, Prohibit, Trash } from 'phosphor-react'
+import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { ToggleSidebar } from '../redux/slices/app'
+import { useTheme } from "@mui/material/styles"
 import { faker } from '@faker-js/faker'
 import AntSwitch from "./AntSwitch"
 import SimpleBar from "simplebar-react";
+import { ToggleSidebar, UpdateSiderbarType } from '../redux/slices/app'
+import { Box, IconButton, Stack, Typography, Avatar, Divider, Button } from '@mui/material'
+import { Phone, X, VideoCamera, CaretRight, Star, Bell, Prohibit, Trash } from 'phosphor-react'
+import DilogBox from './DilogBox'
 
 const Contact = () => {
   const theme = useTheme();
+  const [openBlock, setOpenBlock] = useState(false)
+  const [openDelete, setOpenDelete] = useState(false)
   const dispatch = useDispatch();
   return (
     <Box sx={{ widht: "320px", minWidth: "320px", height: "100vh" }}>
@@ -68,7 +71,7 @@ const Contact = () => {
               <Typography variant='subtitle2'>
                 Media, Docs and Link
               </Typography>
-              <Button endIcon={<CaretRight />}>402</Button>
+              <Button endIcon={<CaretRight />} onClick={() => { dispatch(UpdateSiderbarType("SHARED")) }}>402</Button>
             </Stack>
             {/* Media previews */}
             <Stack direction='row' spacing={2} alignItems='center'>
@@ -89,7 +92,7 @@ const Contact = () => {
                 <Star size={21} />
                 <Typography variant='subtitle2'>Starred messages</Typography>
               </Stack>
-              <IconButton>
+              <IconButton onClick={() => { dispatch(UpdateSiderbarType("STARRED")) }}>
                 <CaretRight />
               </IconButton>
             </Stack>
@@ -114,15 +117,31 @@ const Contact = () => {
                 <Typography variant='caption' fontWeight='500'>Dog, Owl, Parrot, You</Typography>
               </Stack>
             </Stack>
-            {/*  */}
+            {/* Block or Delete */}
             <Stack direction='row' alignItems='center' justifyContent={"center"} spacing={2} sx={{ width: "100%" }}>
-              <Button startIcon={<Prohibit />} fullwidth variant='outlined'>
+              <Button startIcon={<Prohibit />} fullwidth variant='outlined' onClick={() => setOpenBlock(true)}>
                 Block
               </Button>
-              <Button startIcon={<Trash />} fullwidth variant='outlined'>
+              <Button startIcon={<Trash />} fullwidth variant='outlined' onClick={() => setOpenDelete(true)}>
                 Delete
               </Button>
             </Stack>
+            {openBlock &&
+              <DilogBox
+                title={"Block this person !"}
+                desc={"Are you sure that you want to block this contact ?"}
+                open={openBlock}
+                setOpen={setOpenBlock}
+              />
+            }
+            {openDelete &&
+              <DilogBox
+                title={"Delete this chat !"}
+                desc={"Are you sure that you want to delete this contact ?"}
+                open={openDelete}
+                setOpen={setOpenDelete}
+              />
+            }
           </Stack>
         </SimpleBar>
       </Stack>
