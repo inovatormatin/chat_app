@@ -11,9 +11,12 @@ import { useTheme } from "@mui/material/styles";
 import { CaretDown, MagnifyingGlass, Phone, VideoCamera } from "phosphor-react";
 import { faker } from "@faker-js/faker";
 import StyledBadge from "../../components/StyledBadge";
+import { ToggleSidebar } from "../../redux/slices/app";
+import { useDispatch } from "react-redux";
 
 const Header = () => {
   const theme = useTheme();
+  const dispatch = useDispatch();
   return (
     <Box
       sx={{
@@ -33,8 +36,8 @@ const Header = () => {
         justifyContent={"space-between"}
         sx={{ width: "100%", height: "100%" }}
       >
-        <Stack direction={"row"} alignItems={"center"} spacing={2}>
-          {/* Profile IMage */}
+        <Stack onClick={() => dispatch(ToggleSidebar())} direction={"row"} alignItems={"center"} spacing={2}>
+          {/* Profile Image */}
           <Box>
             <StyledBadge
               overlap="circular"
