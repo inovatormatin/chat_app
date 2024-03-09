@@ -15,23 +15,25 @@ import {
 import { RHFTextfield } from "../../components/hook-form";
 import { Eye, EyeSlash } from "phosphor-react";
 
-const LoginForm = () => {
+const NewPasswordForm = () => {
   const [showPassword, setShowPassword] = useState(false);
 
-  const LoginSchema = Yup.object().shape({
-    email: Yup.string()
-      .required("Email is required")
-      .email("Email must be valid email address"),
-    password: Yup.string().required("Password is required"),
+  const NewPasswordSchema = Yup.object().shape({
+    newPassword: Yup.string()
+      .min(6, "Password must contain atleast 6 letters.")
+      .required("Password is required"),
+    confirmPassword: Yup.string()
+      .required("Password is required")
+      .oneOf([Yup.ref("newPassword"), null], "Password didn't matched."),
   });
 
   const defaultValues = {
-    email: "demo@twak.com",
-    password: "demo1234",
+    newPassword: "",
+    confirmPassword: "",
   };
 
   const methods = useForm({
-    resolver: yupResolver(LoginSchema),
+    resolver: yupResolver(NewPasswordSchema),
     defaultValues,
   });
 
@@ -61,10 +63,9 @@ const LoginForm = () => {
         {!!errors.afterSubmit && (
           <Alert severity="error">{errors.afterSubmit.message}</Alert>
         )}
-        <RHFTextfield name="email" label="Email Address" />
         <RHFTextfield
-          name="password"
-          label="Password"
+          name="newPassword"
+          label="New Password"
           type={showPassword ? "text" : "password"}
           InputProps={{
             endAdornment: (
@@ -74,33 +75,40 @@ const LoginForm = () => {
             ),
           }}
         />
-      </Stack>
-      <Stack alignItems="flex-end" sx={{ my: 2 }}>
-        <Link variant="body2" color="inherit" underline="always" component={RouterLink} to="/auth/reset-password">
-          Forgot Password ?
-        </Link>
-      </Stack>
-      <Button
-        fullWidth
-        color="inherit"
-        size="large"
-        type="submit"
-        variant="contained"
-        sx={{
-          bgcolor: "text.primary",
-          color: (theme) =>
-            theme.palette.mode === "light" ? "common.white" : "grey.800",
-          "&:hover": {
+        <RHFTextfield
+          name="confirmPassword"
+          label="Confirm Password"
+          type={showPassword ? "text" : "password"}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment onClick={() => setShowPassword(!showPassword)}>
+                <IconButton>{showPassword ? <Eye /> : <EyeSlash />}</IconButton>
+              </InputAdornment>
+            ),
+          }}
+        />
+        <Button
+          fullWidth
+          color="inherit"
+          size="large"
+          type="submit"
+          variant="contained"
+          sx={{
             bgcolor: "text.primary",
             color: (theme) =>
               theme.palette.mode === "light" ? "common.white" : "grey.800",
-          },
-        }}
-      >
-        Login
-      </Button>
+            "&:hover": {
+              bgcolor: "text.primary",
+              color: (theme) =>
+                theme.palette.mode === "light" ? "common.white" : "grey.800",
+            },
+          }}
+        >
+          Submit
+        </Button>
+      </Stack>
     </FormProvider>
   );
 };
 
-export default LoginForm;
+export default NewPasswordForm;

@@ -1,37 +1,24 @@
-import React, { useState } from "react";
+import React from "react";
 import * as Yup from "yup";
 import { useForm } from "react-hook-form";
-import { Link as RouterLink } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
 import FormProvider from "../../components/hook-form/FormProvider";
-import {
-  Alert,
-  Button,
-  IconButton,
-  InputAdornment,
-  Link,
-  Stack,
-} from "@mui/material";
+import { Alert, Button, Stack } from "@mui/material";
 import { RHFTextfield } from "../../components/hook-form";
-import { Eye, EyeSlash } from "phosphor-react";
 
-const LoginForm = () => {
-  const [showPassword, setShowPassword] = useState(false);
-
-  const LoginSchema = Yup.object().shape({
+const ResetPasswordForm = () => {
+  const ResetPasswordSchema = Yup.object().shape({
     email: Yup.string()
       .required("Email is required")
       .email("Email must be valid email address"),
-    password: Yup.string().required("Password is required"),
   });
 
   const defaultValues = {
     email: "demo@twak.com",
-    password: "demo1234",
   };
 
   const methods = useForm({
-    resolver: yupResolver(LoginSchema),
+    resolver: yupResolver(ResetPasswordSchema),
     defaultValues,
   });
 
@@ -62,23 +49,6 @@ const LoginForm = () => {
           <Alert severity="error">{errors.afterSubmit.message}</Alert>
         )}
         <RHFTextfield name="email" label="Email Address" />
-        <RHFTextfield
-          name="password"
-          label="Password"
-          type={showPassword ? "text" : "password"}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment onClick={() => setShowPassword(!showPassword)}>
-                <IconButton>{showPassword ? <Eye /> : <EyeSlash />}</IconButton>
-              </InputAdornment>
-            ),
-          }}
-        />
-      </Stack>
-      <Stack alignItems="flex-end" sx={{ my: 2 }}>
-        <Link variant="body2" color="inherit" underline="always" component={RouterLink} to="/auth/reset-password">
-          Forgot Password ?
-        </Link>
       </Stack>
       <Button
         fullWidth
@@ -88,6 +58,7 @@ const LoginForm = () => {
         variant="contained"
         sx={{
           bgcolor: "text.primary",
+          mt: 2,
           color: (theme) =>
             theme.palette.mode === "light" ? "common.white" : "grey.800",
           "&:hover": {
@@ -97,10 +68,10 @@ const LoginForm = () => {
           },
         }}
       >
-        Login
+        Send Request
       </Button>
     </FormProvider>
   );
 };
 
-export default LoginForm;
+export default ResetPasswordForm;
