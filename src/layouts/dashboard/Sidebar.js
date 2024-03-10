@@ -15,9 +15,11 @@ import { Gear } from "phosphor-react";
 import { faker } from "@faker-js/faker";
 import useSettings from "../../hooks/useSettings";
 import AntSwitch from "../../components/AntSwitch";
+import { useNavigate } from "react-router-dom";
 
 const Sidebar = () => {
   const theme = useTheme();
+  const navigate = useNavigate();
   const [selected, setSelected] = useState(0);
   const { onToggleMode } = useSettings();
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -27,6 +29,18 @@ const Sidebar = () => {
   };
   const handleClose = () => {
     setAnchorEl(null);
+  };
+  const getPath = (index) => {
+    switch (index) {
+      case 0:
+        return "/profile";
+      case 1:
+        return "/settings";
+      case 2:
+        return "/auth/login";
+      default:
+        break;
+    }
   };
   return (
     <Box
@@ -82,7 +96,10 @@ const Sidebar = () => {
                 </Box>
               ) : (
                 <IconButton
-                  onClick={() => setSelected(el.index)}
+                  onClick={() => {
+                    setSelected(el.index);
+                    navigate(el.path);
+                  }}
                   key={el.index}
                   sx={{
                     width: "max-content",
@@ -118,7 +135,10 @@ const Sidebar = () => {
                       ? "#000"
                       : theme.palette.text.primary,
                 }}
-                onClick={() => setSelected(3)}
+                onClick={() => {
+                  setSelected(3);
+                  navigate("/settings");
+                }}
               >
                 <Gear />
               </IconButton>
@@ -161,7 +181,13 @@ const Sidebar = () => {
             <Stack spacing={1} px={1}>
               {Profile_Menu.map((el, index) => {
                 return (
-                  <MenuItem key={index} onClick={handleClose}>
+                  <MenuItem
+                    key={index}
+                    onClick={() => {
+                      handleClose();
+                      navigate(getPath(index));
+                    }}
+                  >
                     <Stack
                       width={100}
                       direction={"row"}

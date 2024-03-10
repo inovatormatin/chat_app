@@ -28,14 +28,17 @@ const Nav_Buttons = [
   {
     index: 0,
     icon: <ChatCircleDots />,
+    path: "/app",
   },
   {
     index: 1,
     icon: <Users />,
+    path: "/group",
   },
   {
     index: 2,
     icon: <Phone />,
+    path: "/call",
   },
 ];
 
@@ -83,8 +86,7 @@ const membersList = [
     name: faker.name.firstName(),
     online: false,
   },
-]
-
+];
 
 const Call_logs = [
   {
@@ -485,5 +487,5 @@ export {
   Message_options,
   Shared_links,
   Shared_docs,
-  membersList
+  membersList,
 };
