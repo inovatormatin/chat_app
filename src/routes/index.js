@@ -3,11 +3,11 @@ import { Navigate, useRoutes } from "react-router-dom";
 
 // layouts
 import DashboardLayout from "../layouts/dashboard";
+import MainLayout from "../layouts/main";
 
 // config
 import { DEFAULT_PATH } from "../config";
 import LoadingScreen from "../components/LoadingScreen";
-import MainLayout from "../layouts/main";
 
 const Loadable = (Component) => (props) => {
   return (
@@ -43,6 +43,11 @@ export default function Router() {
         { path: "404", element: <Page404 /> },
         { path: "*", element: <Navigate to="/404" replace /> },
       ],
+    },
+    {
+      path: "/auth",
+      element: <MainLayout />,
+      children: [{ path: "signin", element: <LoginPage /> }],
     },
     { path: "*", element: <Navigate to="/404" replace /> },
   ]);
