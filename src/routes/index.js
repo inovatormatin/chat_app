@@ -35,6 +35,8 @@ export default function Router() {
       children: [
         { element: <Navigate to={DEFAULT_PATH} replace />, index: true },
         { path: "app", element: <GeneralApp /> },
+        { path: "group", element: <GroupPage /> },
+        { path: "call", element: <CallPage /> },
         { path: "settings", element: <Settings /> },
 
         { path: "404", element: <Page404 /> },
@@ -48,10 +50,16 @@ export default function Router() {
 const GeneralApp = Loadable(
   lazy(() => import("../pages/dashboard/GeneralApp"))
 );
+const GroupPage = Loadable(lazy(() => import("../pages/dashboard/Group")));
+const CallPage = Loadable(lazy(() => import("../pages/dashboard/Call")));
 const LoginPage = Loadable(lazy(() => import("../pages/auth/Login")));
 const RegisterPage = Loadable(lazy(() => import("../pages/auth/Register")));
-const ResetPasswordPage = Loadable(lazy(() => import("../pages/auth/ResetPassword")));
-const NewPasswordPage = Loadable(lazy(() => import("../pages/auth/NewPassword")));
+const ResetPasswordPage = Loadable(
+  lazy(() => import("../pages/auth/ResetPassword"))
+);
+const NewPasswordPage = Loadable(
+  lazy(() => import("../pages/auth/NewPassword"))
+);
 
 const Settings = Loadable(lazy(() => import("../pages/dashboard/Settings")));
 const Page404 = Loadable(lazy(() => import("../pages/Page404")));
