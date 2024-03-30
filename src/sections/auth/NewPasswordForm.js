@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import * as Yup from "yup";
 import { useForm } from "react-hook-form";
-import { Link as RouterLink } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
 import FormProvider from "../../components/hook-form/FormProvider";
 import {
@@ -9,13 +8,15 @@ import {
   Button,
   IconButton,
   InputAdornment,
-  Link,
   Stack,
 } from "@mui/material";
 import { RHFTextfield } from "../../components/hook-form";
 import { Eye, EyeSlash } from "phosphor-react";
+import { useDispatch } from "react-redux";
+import { NewPassword } from "../../redux/slices/auth";
 
 const NewPasswordForm = () => {
+  const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
 
   const NewPasswordSchema = Yup.object().shape({
@@ -47,6 +48,7 @@ const NewPasswordForm = () => {
   const onSubmit = async (data) => {
     try {
       // submit data to backend
+      dispatch(NewPassword(data));
     } catch (error) {
       console.log(error);
       reset();

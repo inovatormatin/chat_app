@@ -3,11 +3,20 @@ import * as Yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import FormProvider from "../../components/hook-form/FormProvider";
-import { Alert, Button, IconButton, InputAdornment, Stack } from "@mui/material";
+import {
+  Alert,
+  Button,
+  IconButton,
+  InputAdornment,
+  Stack,
+} from "@mui/material";
 import { RHFTextfield } from "../../components/hook-form";
 import { Eye, EyeSlash } from "phosphor-react";
+import { RegisterUser } from "../../redux/slices/auth";
+import { useDispatch } from "react-redux";
 
 const RegisterForm = () => {
+  const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
 
   const RegisterSchema = Yup.object().shape({
@@ -22,7 +31,7 @@ const RegisterForm = () => {
   const defaultValues = {
     firstName: "",
     lastName: "",
-    email: "example@twak.com",
+    email: "example@xyz.com",
     password: "example1234",
   };
 
@@ -41,6 +50,7 @@ const RegisterForm = () => {
   const onSubmit = async (data) => {
     try {
       // submit data to backend
+      dispatch(RegisterUser(data));
     } catch (error) {
       console.log(error);
       reset();

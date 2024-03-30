@@ -14,8 +14,11 @@ import {
 } from "@mui/material";
 import { RHFTextfield } from "../../components/hook-form";
 import { Eye, EyeSlash } from "phosphor-react";
+import { useDispatch } from "react-redux";
+import { LoginUser } from "../../redux/slices/auth";
 
 const LoginForm = () => {
+  const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
 
   const LoginSchema = Yup.object().shape({
@@ -45,6 +48,7 @@ const LoginForm = () => {
   const onSubmit = async (data) => {
     try {
       // submit data to backend
+      dispatch(LoginUser(data));
     } catch (error) {
       console.log(error);
       reset();
@@ -76,7 +80,13 @@ const LoginForm = () => {
         />
       </Stack>
       <Stack alignItems="flex-end" sx={{ my: 2 }}>
-        <Link variant="body2" color="inherit" underline="always" component={RouterLink} to="/auth/reset-password">
+        <Link
+          variant="body2"
+          color="inherit"
+          underline="always"
+          component={RouterLink}
+          to="/auth/reset-password"
+        >
           Forgot Password ?
         </Link>
       </Stack>
