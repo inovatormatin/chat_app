@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import axios from "../../utils/axios";
+import { showSnackbar } from "./app";
 
 const initialState = {
   email: "youremail@abc.com",
@@ -43,6 +44,7 @@ export const LoginUser = (formValues) => {
     },
   };
   return async (dispatch, getState) => {
+    dispatch(slice.actions.updateIsLoading({ isLoading: true, error: false }));
     await axios
       .post("/auth/login", { ...formValues }, config)
       .then((response) => {
@@ -52,8 +54,26 @@ export const LoginUser = (formValues) => {
             token: response.data.token,
           })
         );
+        dispatch(
+          slice.actions.updateIsLoading({ isLoading: false, error: false })
+        );
+        dispatch(
+          showSnackbar({
+            severity: "success",
+            message: response.data.message,
+          })
+        );
       })
       .catch((error) => {
+        dispatch(
+          slice.actions.updateIsLoading({ isLoading: false, error: true })
+        );
+        dispatch(
+          showSnackbar({
+            severity: "error",
+            message: error.response.data.message,
+          })
+        );
         console.error(error, "Something wrong here.");
       });
   };
@@ -63,6 +83,12 @@ export const LoginUser = (formValues) => {
 export const LogOutUser = () => {
   return async (dispatch, getState) => {
     dispatch(slice.actions.signOut());
+    dispatch(
+      showSnackbar({
+        severity: "success",
+        message: "Logout successfully.",
+      })
+    );
   };
 };
 
@@ -75,12 +101,30 @@ export const ForgotPassword = (formValues) => {
     },
   };
   return async (dispatch, getState) => {
+    dispatch(slice.actions.updateIsLoading({ isLoading: true, error: false }));
     await axios
       .post("/auth/forgot-password", { ...formValues }, config)
       .then((response) => {
-        // console.log(response);
+        dispatch(
+          slice.actions.updateIsLoading({ isLoading: false, error: false })
+        );
+        dispatch(
+          showSnackbar({
+            severity: "success",
+            message: response.data.message,
+          })
+        );
       })
       .catch((error) => {
+        dispatch(
+          slice.actions.updateIsLoading({ isLoading: false, error: false })
+        );
+        dispatch(
+          showSnackbar({
+            severity: "error",
+            message: error.response.data.message,
+          })
+        );
         console.error(error, "Something wrong here.");
       });
   };
@@ -105,6 +149,7 @@ export const NewPassword = (formValues) => {
     },
   };
   return async (dispatch, getState) => {
+    dispatch(slice.actions.updateIsLoading({ isLoading: true, error: false }));
     await axios
       .post("/auth/reset-password", { ...data }, config)
       .then((response) => {
@@ -114,8 +159,26 @@ export const NewPassword = (formValues) => {
             token: response.data.token,
           })
         );
+        dispatch(
+          slice.actions.updateIsLoading({ isLoading: false, error: false })
+        );
+        dispatch(
+          showSnackbar({
+            severity: "success",
+            message: response.data.message,
+          })
+        );
       })
       .catch((error) => {
+        dispatch(
+          slice.actions.updateIsLoading({ isLoading: false, error: true })
+        );
+        dispatch(
+          showSnackbar({
+            severity: "error",
+            message: error.response.data.message,
+          })
+        );
         console.error(error, "Something wrong here.");
       });
   };
@@ -134,17 +197,28 @@ export const RegisterUser = (formValues) => {
     await axios
       .post("/auth/register", { ...formValues }, config)
       .then((response) => {
-        console.log(response);
         dispatch(
           slice.actions.updateIsLoading({ isLoading: false, error: false })
         );
         dispatch(
           slice.actions.updateRegisterEmail({ email: formValues.email })
         );
+        dispatch(
+          showSnackbar({
+            severity: "success",
+            message: response.data.message,
+          })
+        );
       })
       .catch((error) => {
         dispatch(
           slice.actions.updateIsLoading({ isLoading: false, error: true })
+        );
+        dispatch(
+          showSnackbar({
+            severity: "error",
+            message: error.response.data.message,
+          })
         );
         console.error(error, "Something wrong here.");
       })
@@ -165,6 +239,7 @@ export const VerifyOTP = (formValues) => {
     },
   };
   return async (dispatch, getState) => {
+    dispatch(slice.actions.updateIsLoading({ isLoading: true, error: false }));
     let data = {
       email: getState().auth.email,
       otp: formValues.otp,
@@ -183,10 +258,22 @@ export const VerifyOTP = (formValues) => {
             token: response.data.token,
           })
         );
+        dispatch(
+          showSnackbar({
+            severity: "success",
+            message: response.data.message,
+          })
+        );
       })
       .catch((error) => {
         dispatch(
           slice.actions.updateIsLoading({ isLoading: false, error: true })
+        );
+        dispatch(
+          showSnackbar({
+            severity: "error",
+            message: error.response.data.message,
+          })
         );
         console.error(error, "Something wrong here.");
       });
