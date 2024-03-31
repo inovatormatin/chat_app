@@ -54,6 +54,7 @@ export const LoginUser = (formValues) => {
             token: response.data.token,
           })
         );
+        window.localStorage.setItem("user_id", response.data.user_id);
         dispatch(
           slice.actions.updateIsLoading({ isLoading: false, error: false })
         );
@@ -89,6 +90,7 @@ export const LogOutUser = () => {
         message: "Logout successfully.",
       })
     );
+    window.localStorage.removeItem("user_id");
   };
 };
 
@@ -258,6 +260,7 @@ export const VerifyOTP = (formValues) => {
             token: response.data.token,
           })
         );
+        window.localStorage.setItem("user_id", response.data.user_id);
         dispatch(
           showSnackbar({
             severity: "success",
