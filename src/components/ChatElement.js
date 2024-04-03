@@ -1,14 +1,19 @@
-import React from "react"
+import React from "react";
 import { Avatar, Badge, Box, Stack, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { faker } from "@faker-js/faker";
 import StyledBadge from "./StyledBadge";
-
+import { useDispatch } from "react-redux";
+import { SelectConversation } from "../redux/slices/app";
 
 const ChatElement = ({ id, img, name, msg, time, unread, pinned, online }) => {
   const theme = useTheme();
+  const dispatch = useDispatch();
   return (
     <Box
+      onClick={() => {
+        dispatch(SelectConversation({ room_id: id }));
+      }}
       sx={{
         width: "100%",
         borderRadius: 1,
@@ -33,10 +38,10 @@ const ChatElement = ({ id, img, name, msg, time, unread, pinned, online }) => {
               variant="dot"
               sx={{ height: 1 }}
             >
-              <Avatar src={faker.image.avatar()} alt={faker.name.fullName()}/>
+              <Avatar src={faker.image.avatar()} alt={faker.name.fullName()} />
             </StyledBadge>
           ) : (
-            <Avatar src={faker.image.avatar()} alt={faker.name.fullName()}/>
+            <Avatar src={faker.image.avatar()} alt={faker.name.fullName()} />
           )}
           {/* Person name / msg */}
           <Stack spacing={0.3}>

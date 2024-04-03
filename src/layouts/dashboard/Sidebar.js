@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import React, { useState } from "react";
-import Logo from "../../assets/Images/logo.ico";
+import Logo from "../../assets/Images/squarelogo.png";
 import { Nav_Buttons, Profile_Menu } from "../../data";
 import { Gear } from "phosphor-react";
 import { faker } from "@faker-js/faker";
@@ -67,9 +67,8 @@ const Sidebar = () => {
           {/* logo */}
           <Box
             sx={{
-              background: theme.palette.primary.main,
-              height: 64,
-              width: 64,
+              height: 54,
+              width: 54,
               borderRadius: 2.5,
             }}
           >
