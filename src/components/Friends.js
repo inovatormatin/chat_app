@@ -36,7 +36,7 @@ const UserComponent = ({ firstName, lastName, _id, online, img }) => {
         alignItems={"center"}
         justifyContent={"space-between"}
       >
-        <Stack direction={"row"} spacing={2}>
+        <Stack direction={"row"} spacing={2} alignItems="center">
           {/* Person Image */}
           {online ? (
             <StyledBadge
@@ -59,6 +59,7 @@ const UserComponent = ({ firstName, lastName, _id, online, img }) => {
         <Stack direction="row" spacing={2} alignItems={"center"}>
           <Button
             onClick={() => {
+              console.log(socket);
               socket.emit("friend_request", { to: _id, from: user_id }, () => {
                 alert("request sent");
               });
