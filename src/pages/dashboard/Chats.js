@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ChatList } from "../../data";
 import { useTheme } from "@mui/material/styles";
 import {
@@ -24,9 +24,13 @@ import {
   StyleInputBase,
 } from "../../components/Search";
 import Friends from "../../sections/main/Friends";
+import { socket } from "../../socket";
+import { useSelector } from "react-redux";
 
 const Chats = () => {
   const theme = useTheme();
+  const user_id = window.localStorage.getItem("user_id");
+  const {direct_chat} = useSelector(state => state.conversation)
   const [openDialogBox, setOpenDialogBox] = useState(false);
   const handleOpenDialogbox = () => {
     setOpenDialogBox(true);
@@ -34,6 +38,12 @@ const Chats = () => {
   const handleCloseDialogbox = () => {
     setOpenDialogBox(false);
   }; // to close the dilog box of users.
+
+  useEffect(() => {
+    socket.emit("get_direct_conversations", {user_id}, (data) => {
+      // data => list of conversations
+    })
+  }, []);
 
   return (
     <>
@@ -90,20 +100,21 @@ const Chats = () => {
           <SimpleBar style={{ height: "calc(100vh - 210px)" }}>
             <Stack direction={"column"} spacing={2} sx={{ flexGrow: 1 }}>
               {/* Pinned Chats */}
-              <Stack spacing={2.4}>
+              {/* <Stack spacing={2.4}>
                 <Typography variant="subtitle2" sx={{ color: "#676767" }}>
                   Pinned
                 </Typography>
                 {ChatList.filter((el) => el.pinned).map((el, index) => {
                   return <ChatElement key={index} {...el} />;
                 })}
-              </Stack>
+              </Stack> */}
               {/* All Chats */}
               <Stack spacing={2.4}>
                 <Typography variant="subtitle2" sx={{ color: "#676767" }}>
                   All Chats
                 </Typography>
-                {ChatList.filter((el) => !el.pinned).map((el, index) => {
+                {console.log(direct_chat)}
+                {direct_chat.convesations.filter((el) => !el.pinned).map((el, index) => {
                   return <ChatElement key={index} {...el} />;
                 })}
               </Stack>

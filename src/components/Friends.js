@@ -90,7 +90,7 @@ const FriendComponent = ({ firstName, lastName, _id, online, img }) => {
         alignItems={"center"}
         justifyContent={"space-between"}
       >
-        <Stack direction={"row"} spacing={2}>
+        <Stack direction={"row"} spacing={2} alignItems="center">
           {/* Person Image */}
           {online ? (
             <StyledBadge
@@ -141,7 +141,7 @@ const RequestComponent = ({ firstName, lastName, _id, online, img, id }) => {
         alignItems={"center"}
         justifyContent={"space-between"}
       >
-        <Stack direction={"row"} spacing={2}>
+        <Stack direction={"row"} spacing={2} alignItems="center">
           {/* Person Image */}
           {online ? (
             <StyledBadge
