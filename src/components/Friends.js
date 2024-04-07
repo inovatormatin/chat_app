@@ -75,6 +75,7 @@ const UserComponent = ({ firstName, lastName, _id, online, img }) => {
 
 const FriendComponent = ({ firstName, lastName, _id, online, img }) => {
   const theme = useTheme();
+  const user_id = window.localStorage.getItem("user_id")
   const name = `${firstName} ${lastName}`;
   return (
     <StyledChatBox
@@ -114,6 +115,7 @@ const FriendComponent = ({ firstName, lastName, _id, online, img }) => {
           <IconButton
             onClick={() => {
               // start new conv.
+              socket.emit("start_conversation", {to: _id, from: user_id})
             }}
           >
             <Chat />
