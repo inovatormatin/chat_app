@@ -1,8 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { faker } from "@faker-js/faker";
 
-const user_id = window.localStorage.getItem("user_id");
-
 const initialState = {
   direct_chat: {
     convesations: [],
@@ -17,6 +15,7 @@ const slice = createSlice({
   initialState,
   reducers: {
     fetchDirectConversation(state, action) {
+      const user_id = window.localStorage.getItem("user_id");
       const list = action.payload.conversation.map((el) => {
         const this_user = el.participants.find(
           (elm) => elm._id.toStrin() !== user_id
@@ -37,17 +36,18 @@ const slice = createSlice({
       state.direct_chat.convesations = list;
     },
     updateDirectConversation(state, action) {
-      // data = {}
-      // list = list.map(el => el.id === data._id ? data: el);
+      const user_id = window.localStorage.getItem("user_id");
       const this_conversation = action.payload.convesations;
       state.direct_chat.convesations = state.direct_chat.convesations.map(
         (el) => {
           if (el.id !== this_conversation._id) {
+            console.log("1. ----->", { this_conversation, el });
             return el;
           } else {
             const user = this_conversation.participants.find(
               (elm) => elm._id.toString() !== user_id
             );
+            console.log("2. ----->", { this_conversation, user });
             return {
               id: this_conversation._id,
               user_id: user._id,
@@ -64,12 +64,13 @@ const slice = createSlice({
       );
     },
     addDirectConversation(state, action) {
-      // data = {}
-      // list = list.push(data);
+      const user_id = window.localStorage.getItem("user_id");
       const this_conversation = action.payload.convesations;
       const user = this_conversation.participants.find(
         (elm) => elm._id.toString() !== user_id
       );
+      console.log("here ----->", { this_conversation, user, user_id });
+
       state.direct_chat.convesations.push({
         id: this_conversation._id,
         user_id: user._id,

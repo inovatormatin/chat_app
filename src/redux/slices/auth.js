@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import axios from "../../utils/axios";
 import { showSnackbar } from "./app";
+import { socket } from "../../socket";
 
 const initialState = {
   email: "youremail@abc.com",
@@ -90,6 +91,7 @@ export const LogOutUser = () => {
         message: "Logout successfully.",
       })
     );
+    socket.disconnect(0);
     window.localStorage.removeItem("user_id");
   };
 };

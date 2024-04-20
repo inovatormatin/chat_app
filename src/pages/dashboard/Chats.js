@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { ChatList } from "../../data";
+// import { ChatList } from "../../data";
 import { useTheme } from "@mui/material/styles";
 import {
   ArchiveBox,
@@ -30,7 +30,7 @@ import { useSelector } from "react-redux";
 const Chats = () => {
   const theme = useTheme();
   const user_id = window.localStorage.getItem("user_id");
-  const {direct_chat} = useSelector(state => state.conversation)
+  const { direct_chat } = useSelector((state) => state.conversation);
   const [openDialogBox, setOpenDialogBox] = useState(false);
   const handleOpenDialogbox = () => {
     setOpenDialogBox(true);
@@ -40,9 +40,11 @@ const Chats = () => {
   }; // to close the dilog box of users.
 
   useEffect(() => {
-    socket.emit("get_direct_conversations", {user_id}, (data) => {
+    socket.emit("user:get_all_conversation", { user_id }, (data) => {
       // data => list of conversations
-    })
+      console.log(data);
+    });
+    // eslint-disable-next-line
   }, []);
 
   return (
@@ -113,10 +115,11 @@ const Chats = () => {
                 <Typography variant="subtitle2" sx={{ color: "#676767" }}>
                   All Chats
                 </Typography>
-                {console.log(direct_chat)}
-                {direct_chat.convesations.filter((el) => !el.pinned).map((el, index) => {
-                  return <ChatElement key={index} {...el} />;
-                })}
+                {direct_chat.convesations
+                  .filter((el) => !el.pinned)
+                  .map((el, index) => {
+                    return <ChatElement key={index} {...el} />;
+                  })}
               </Stack>
             </Stack>
           </SimpleBar>

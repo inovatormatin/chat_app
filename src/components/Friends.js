@@ -18,7 +18,14 @@ const StyledChatBox = styled(Box)(({ theme }) => ({
   },
 }));
 
-const UserComponent = ({ firstName, lastName, _id, online, img }) => {
+const UserComponent = ({
+  firstName,
+  lastName,
+  _id,
+  status,
+  synergy_status,
+  img,
+}) => {
   const theme = useTheme();
   const user_id = window.localStorage.getItem("user_id");
   const name = `${firstName} ${lastName}`;
@@ -38,7 +45,7 @@ const UserComponent = ({ firstName, lastName, _id, online, img }) => {
       >
         <Stack direction={"row"} spacing={2} alignItems="center">
           {/* Person Image */}
-          {online ? (
+          {status === "Online" ? (
             <StyledBadge
               overlap="circular"
               anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
@@ -57,25 +64,87 @@ const UserComponent = ({ firstName, lastName, _id, online, img }) => {
         </Stack>
         {/* Time and msg count */}
         <Stack direction="row" spacing={2} alignItems={"center"}>
-          <Button
-            onClick={() => {
-              console.log(socket);
-              socket.emit("friend_request", { to: _id, from: user_id }, () => {
-                alert("request sent");
-              });
-            }}
-          >
-            Send Request
-          </Button>
+          {synergy_status === "sent" && (
+            <>
+              <Button
+                variant="contained"
+                onClick={() => {
+                  // socket.emit("user:send_friend_request", {
+                  //   sender_id: user_id,
+                  //   receiver_id: _id,
+                  // });
+                }}
+              >
+                Revoke
+              </Button>
+              <Button
+                variant="outlined"
+                onClick={() => {
+                  // socket.emit("user:send_friend_request", {
+                  //   sender_id: user_id,
+                  //   receiver_id: _id,
+                  // });
+                }}
+              >
+                Pending
+              </Button>
+            </>
+          )}
+          {synergy_status === "received" && (
+            <>
+              <Button
+                variant="contained"
+                onClick={() => {
+                  // socket.emit("user:send_friend_request", {
+                  //   sender_id: user_id,
+                  //   receiver_id: _id,
+                  // });
+                }}
+              >
+                Accept
+              </Button>
+              <Button
+                variant="outlined"
+                onClick={() => {
+                  // socket.emit("user:send_friend_request", {
+                  //   sender_id: user_id,
+                  //   receiver_id: _id,
+                  // });
+                }}
+              >
+                Decline
+              </Button>
+            </>
+          )}
+          {/* If user is unknown */}
+          {synergy_status === "unknown" && (
+            <Button
+              onClick={() => {
+                socket.emit("user:send_friend_request", {
+                  sender_id: user_id,
+                  receiver_id: _id,
+                });
+              }}
+            >
+              Send Request
+            </Button>
+          )}
         </Stack>
       </Stack>
     </StyledChatBox>
   );
 };
 
-const FriendComponent = ({ firstName, lastName, _id, online, img }) => {
+const FriendComponent = ({
+  firstName,
+  lastName,
+  _id,
+  online,
+  img,
+  handleClose,
+}) => {
   const theme = useTheme();
-  const user_id = window.localStorage.getItem("user_id")
+  const user_id = window.localStorage.getItem("user_id");
   const name = `${firstName} ${lastName}`;
   return (
     <StyledChatBox
@@ -115,7 +184,8 @@ const FriendComponent = ({ firstName, lastName, _id, online, img }) => {
           <IconButton
             onClick={() => {
               // start new conv.
-              socket.emit("start_conversation", {to: _id, from: user_id})
+              socket.emit("start_conversation", { to: _id, from: user_id });
+              handleClose();
             }}
           >
             <Chat />
@@ -126,7 +196,7 @@ const FriendComponent = ({ firstName, lastName, _id, online, img }) => {
   );
 };
 
-const RequestComponent = ({ firstName, lastName, _id, online, img, id }) => {
+const RequestComponent = ({ firstName, lastName, _id, online, img }) => {
   const theme = useTheme();
   const name = `${firstName} ${lastName}`;
   return (
@@ -145,7 +215,7 @@ const RequestComponent = ({ firstName, lastName, _id, online, img, id }) => {
       >
         <Stack direction={"row"} spacing={2} alignItems="center">
           {/* Person Image */}
-          {online ? (
+          {online === "Online" ? (
             <StyledBadge
               overlap="circular"
               anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
@@ -165,13 +235,28 @@ const RequestComponent = ({ firstName, lastName, _id, online, img, id }) => {
         {/* Time and msg count */}
         <Stack direction="row" spacing={2} alignItems={"center"}>
           <Button
+            variant="contained"
+            color="primary"
             onClick={() => {
-              socket.emit("accept_request", { request_id: id }, () => {
-                alert("request accepted");
-              });
+              // socket.emit("user:send_friend_request", {
+              //   sender_id: user_id,
+              //   receiver_id: _id,
+              // });
             }}
           >
-            Accept Request
+            Accept
+          </Button>
+          <Button
+            variant="outlined"
+            color="error"
+            onClick={() => {
+              // socket.emit("user:send_friend_request", {
+              //   sender_id: user_id,
+              //   receiver_id: _id,
+              // });
+            }}
+          >
+            Decline
           </Button>
         </Stack>
       </Stack>

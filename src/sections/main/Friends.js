@@ -42,8 +42,8 @@ const Friends = ({ open, handleClose }) => {
                 switch (value) {
                   case 0: // display all users
                     return <UsersLists />;
-                  case 1: // displey all friends
-                    return <FriendList />;
+                  case 1: // display all friends
+                    return <FriendList handleClose={handleClose} />;
                   case 2: // display all friend req.
                     return <FriendReqList />;
                   default:
@@ -78,7 +78,7 @@ const UsersLists = () => {
 };
 
 // Friend List
-const FriendList = () => {
+const FriendList = ({ handleClose }) => {
   const dispatch = useDispatch();
   const { friends } = useSelector((state) => state.app);
   useEffect(() => {
@@ -88,7 +88,9 @@ const FriendList = () => {
     <>
       {console.log(friends)}
       {friends.map((el, idx) => {
-        return <FriendComponent key={el._id} {...el} />;
+        return (
+          <FriendComponent key={el._id} {...el} handleClose={handleClose} />
+        );
       })}
     </>
   );
@@ -101,10 +103,11 @@ const FriendReqList = () => {
   useEffect(() => {
     dispatch(fetchFriendRequest());
   }, [dispatch]); // fetching friends requset list
+  console.log(freindRequests);
   return (
     <>
       {freindRequests.map((el, idx) => {
-        return <RequestComponent key={el._id} {...el.sender} id={el._id} />;
+        return <RequestComponent key={el._id} {...el} />;
       })}
     </>
   );
