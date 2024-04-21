@@ -5,18 +5,49 @@ import {
   fetchFriendRequest,
   fetchFriends,
   fetchUsers,
+  showSnackbar,
 } from "../../redux/slices/app";
 import {
   FriendComponent,
   RequestComponent,
   UserComponent,
 } from "../../components/Friends";
+import { socket } from "../../socket";
 
 const Friends = ({ open, handleClose }) => {
   const [value, setValue] = useState(0);
+  const dispatch = useDispatch();
   const handleChange = (event, newValue) => {
     setValue(newValue);
   }; // handling the tabs.
+
+  useEffect(() => {
+    // Friend request withdrawn
+    socket.on("user:revoked_friend_request", (data) => {
+      dispatch(fetchUsers());
+      dispatch(showSnackbar({ severity: "success", message: data.msg }));
+    });
+
+    // Accept friend request
+    socket.on("user:accept_friend_request", (data) => {
+      dispatch(fetchUsers());
+      dispatch(showSnackbar({ severity: "success", message: data.msg }));
+    });
+
+    // Reject friend request
+    socket.on("user:declined_friend_request", (data) => {
+      dispatch(fetchUsers());
+      dispatch(fetchFriendRequest());
+      dispatch(showSnackbar({ severity: "success", message: data.msg }));
+    });
+
+    return () => {
+      socket?.off("user:revoked_friend_request");
+      socket?.off("user:accept_friend_request");
+    };
+    // eslint-disable-next-line
+  }, []);
+
   return (
     <>
       <Dialog

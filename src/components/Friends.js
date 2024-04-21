@@ -69,25 +69,15 @@ const UserComponent = ({
               <Button
                 variant="contained"
                 onClick={() => {
-                  // socket.emit("user:send_friend_request", {
-                  //   sender_id: user_id,
-                  //   receiver_id: _id,
-                  // });
+                  socket.emit("user:withdraw_friend_request", {
+                    sender_id: user_id,
+                    receiver_id: _id,
+                  });
                 }}
               >
                 Revoke
               </Button>
-              <Button
-                variant="outlined"
-                onClick={() => {
-                  // socket.emit("user:send_friend_request", {
-                  //   sender_id: user_id,
-                  //   receiver_id: _id,
-                  // });
-                }}
-              >
-                Pending
-              </Button>
+              <Button variant="outlined">Pending</Button>
             </>
           )}
           {synergy_status === "received" && (
@@ -95,10 +85,10 @@ const UserComponent = ({
               <Button
                 variant="contained"
                 onClick={() => {
-                  // socket.emit("user:send_friend_request", {
-                  //   sender_id: user_id,
-                  //   receiver_id: _id,
-                  // });
+                  socket.emit("user:accept_friend_request", {
+                    receiver_id: _id,
+                    sender_id: user_id,
+                  });
                 }}
               >
                 Accept
@@ -106,10 +96,10 @@ const UserComponent = ({
               <Button
                 variant="outlined"
                 onClick={() => {
-                  // socket.emit("user:send_friend_request", {
-                  //   sender_id: user_id,
-                  //   receiver_id: _id,
-                  // });
+                  socket.emit("user:decline_friend_request", {
+                    receiver_id: _id,
+                    sender_id: user_id,
+                  });
                 }}
               >
                 Decline
@@ -199,6 +189,7 @@ const FriendComponent = ({
 const RequestComponent = ({ firstName, lastName, _id, online, img }) => {
   const theme = useTheme();
   const name = `${firstName} ${lastName}`;
+  const user_id = window.localStorage.getItem("user_id");
   return (
     <StyledChatBox
       sx={{
@@ -238,10 +229,10 @@ const RequestComponent = ({ firstName, lastName, _id, online, img }) => {
             variant="contained"
             color="primary"
             onClick={() => {
-              // socket.emit("user:send_friend_request", {
-              //   sender_id: user_id,
-              //   receiver_id: _id,
-              // });
+              socket.emit("user:accept_friend_request", {
+                receiver_id: _id,
+                sender_id: user_id,
+              });
             }}
           >
             Accept
@@ -250,10 +241,10 @@ const RequestComponent = ({ firstName, lastName, _id, online, img }) => {
             variant="outlined"
             color="error"
             onClick={() => {
-              // socket.emit("user:send_friend_request", {
-              //   sender_id: user_id,
-              //   receiver_id: _id,
-              // });
+              socket.emit("user:decline_friend_request", {
+                receiver_id: _id,
+                sender_id: user_id,
+              });
             }}
           >
             Decline

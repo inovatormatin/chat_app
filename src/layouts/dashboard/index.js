@@ -9,18 +9,9 @@ import {
   fetchUsers,
   showSnackbar,
 } from "../../redux/slices/app";
-// import { SelectConversation, showSnackbar } from "../../redux/slices/app";
-// import {
-//   AddDirectConversation,
-//   UpdateDirectConversation,
-// } from "../../redux/slices/conversation";
-
 const DashboardLayout = () => {
   const { isLoggedIn } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
-  // const { convesations } = useSelector(
-  //   (state) => state.conversation.direct_chat
-  // );
   const user_id = window.localStorage.getItem("user_id");
   const handleErrors = (err) => {
     console.log("Socket Error", err);
@@ -39,15 +30,29 @@ const DashboardLayout = () => {
       });
       // New friend request received
       socket.on("app:new_friend_request_received", (data) => {
-        console.log("New Friend Req.", data);
         dispatch(fetchFriendRequest());
+        dispatch(fetchUsers());
         dispatch(showSnackbar({ severity: "info", message: data.msg }));
+      });
+      // Friend request witdrawn
+      socket.on("app:friend_request_witdrawn", (data) => {
+        dispatch(fetchFriendRequest());
+        dispatch(fetchUsers());
       });
       // New friend request sent
       socket.on("app:new_friend_request_sent", (data) => {
-        console.log("New Friend Req.", data);
         dispatch(fetchUsers());
         dispatch(showSnackbar({ severity: "success", message: data.msg }));
+      });
+      // Friend request approved
+      socket.on("app:friend_request_approved", (data) => {
+        dispatch(fetchUsers());
+        dispatch(showSnackbar({ severity: "success", message: data.msg }));
+      });
+      // Friend request rejected
+      socket.on("app:friend_request_rejected", (data) => {
+        dispatch(fetchUsers());
+        dispatch(showSnackbar({ severity: "error", message: data.msg }));
       });
       // error handling.
       socket.on("connect_error", (err) => handleErrors(err));
@@ -57,6 +62,14 @@ const DashboardLayout = () => {
     return () => {
       socket?.off("user:offline");
       socket?.off("user:online");
+      socket?.off("app:new_friend_request_received");
+      socket?.off("app:friend_request_witdrawn");
+      socket?.off("app:new_friend_request_sent");
+      socket?.off("app:friend_request_approved");
+      socket?.off("app:friend_request_rejected");
+      socket?.off("connect_error");
+      socket?.off("connect_failed");
+      socket?.off("disconnect");
     };
     // eslint-disable-next-line
   }, []);
