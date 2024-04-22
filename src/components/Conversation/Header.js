@@ -12,11 +12,12 @@ import { CaretDown, MagnifyingGlass, Phone, VideoCamera } from "phosphor-react";
 import { faker } from "@faker-js/faker";
 import StyledBadge from "../../components/StyledBadge";
 import { ToggleSidebar } from "../../redux/slices/app";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const Header = () => {
   const theme = useTheme();
   const dispatch = useDispatch();
+  const { friend } = useSelector((state) => state.conversation.direct_chat);
   return (
     <Box
       sx={{
@@ -36,24 +37,35 @@ const Header = () => {
         justifyContent={"space-between"}
         sx={{ width: "100%", height: "100%" }}
       >
-        <Stack onClick={() => dispatch(ToggleSidebar())} direction={"row"} alignItems={"center"} spacing={2}>
-          {/* Profile Image */}
-          <Box>
-            <StyledBadge
-              overlap="circular"
-              anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-              variant="dot"
-              sx={{ height: 1 }}
-            >
-              <Avatar alt={faker.name.fullName()} src={faker.image.avatar()} />
-            </StyledBadge>
-          </Box>
-          {/* Name and status */}
-          <Stack>
-            <Typography variant="subtitle2">{faker.name.fullName()}</Typography>
-            <Typography variant="caption">Online</Typography>
+        {friend !== null && (
+          <Stack
+            onClick={() => dispatch(ToggleSidebar())}
+            direction={"row"}
+            alignItems={"center"}
+            spacing={2}
+          >
+            {/* Profile Image */}
+            <Box>
+              {friend.status === "Online" ? (
+                <StyledBadge
+                  overlap="circular"
+                  anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                  variant="dot"
+                  sx={{ height: 1 }}
+                >
+                  <Avatar src={faker.image.avatar()} alt={friend.firstName} />
+                </StyledBadge>
+              ) : (
+                <Avatar src={faker.image.avatar()} alt={friend.firstName} />
+              )}
+            </Box>
+            {/* Name and status */}
+            <Stack>
+              <Typography variant="subtitle2">{`${friend.firstName} ${friend.lastName}`}</Typography>
+              <Typography variant="caption">{friend.status}</Typography>
+            </Stack>
           </Stack>
-        </Stack>
+        )}
         <Stack direction={"row"} alignItems={"center"} spacing={3}>
           <IconButton>
             <VideoCamera />

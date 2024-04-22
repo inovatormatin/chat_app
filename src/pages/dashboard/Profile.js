@@ -1,11 +1,11 @@
 import React from "react";
 import { Box, IconButton, Stack, Typography } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
+// import { useTheme } from "@mui/material/styles";
 import { CaretLeft } from "phosphor-react";
 import ProfileForm from "../../sections/ProfileForm";
 
 const Profile = () => {
-  const theme = useTheme();
+  // const theme = useTheme();
   return (
     <>
       <Stack direction="row" sx={{ width: "100%" }}>

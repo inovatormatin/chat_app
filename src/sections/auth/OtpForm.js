@@ -31,13 +31,17 @@ const OtpForm = () => {
     reset,
     setError,
     handleSubmit,
-    formState: { errors, isSubmitting, isSubmitSuccessfuly },
+    formState: {
+      errors,
+      // isSubmitting,
+      // isSubmitSuccessfuly
+    },
   } = methods;
 
   const onSubmit = async (data) => {
     try {
       // submit data to backend
-      dispatch(VerifyOTP(data))
+      dispatch(VerifyOTP(data));
     } catch (error) {
       console.log(error);
       reset();

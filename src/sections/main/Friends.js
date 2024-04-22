@@ -117,7 +117,6 @@ const FriendList = ({ handleClose }) => {
   }, [dispatch]); // fetching friends list
   return (
     <>
-      {console.log(friends)}
       {friends.map((el, idx) => {
         return (
           <FriendComponent key={el._id} {...el} handleClose={handleClose} />
@@ -134,7 +133,6 @@ const FriendReqList = () => {
   useEffect(() => {
     dispatch(fetchFriendRequest());
   }, [dispatch]); // fetching friends requset list
-  console.log(freindRequests);
   return (
     <>
       {freindRequests.map((el, idx) => {

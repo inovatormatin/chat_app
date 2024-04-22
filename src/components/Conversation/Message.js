@@ -1,5 +1,5 @@
 import React from "react";
-import { Chat_History } from "../../data";
+// import { Chat_History } from "../../data";
 import { Box, Stack } from "@mui/material";
 import {
   DocMsg,
@@ -9,12 +9,16 @@ import {
   TextMsg,
   TimeLine,
 } from "./MsgTypes";
+import { useSelector } from "react-redux";
 
-const Message = ({menu}) => {
+const Message = ({ menu }) => {
+  const { current_convesation } = useSelector(
+    (state) => state.conversation.direct_chat
+  );
   return (
     <Box p={3}>
       <Stack spacing={3}>
-        {Chat_History.map((el, idx) => {
+        {current_convesation.map((el, idx) => {
           switch (el.type) {
             case "divider":
               // TimeLine
@@ -24,19 +28,19 @@ const Message = ({menu}) => {
               switch (el.subtype) {
                 case "img":
                   // For image
-                  return <MediaMsg key={idx} el={el} menu={menu}/>;
+                  return <MediaMsg key={idx} el={el} menu={menu} />;
                 case "doc":
                   // For doc
-                  return <DocMsg key={idx} el={el} menu={menu}/>;
+                  return <DocMsg key={idx} el={el} menu={menu} />;
                 case "link":
                   // For link
-                  return <LinkMsg key={idx} el={el} menu={menu}/>;
+                  return <LinkMsg key={idx} el={el} menu={menu} />;
                 case "reply":
                   // For reply msg
-                  return <ReplyMsg key={idx} el={el} menu={menu}/>;
+                  return <ReplyMsg key={idx} el={el} menu={menu} />;
                 default:
                   // For normal text
-                  return <TextMsg key={idx} el={el} menu={menu}/>;
+                  return <TextMsg key={idx} el={el} menu={menu} />;
               }
             default:
               return <></>;

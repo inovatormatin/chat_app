@@ -42,7 +42,11 @@ const NewPasswordForm = () => {
     reset,
     setError,
     handleSubmit,
-    formState: { errors, isSubmitting, isSubmitSuccessfuly },
+    formState: {
+      errors,
+      // isSubmitting,
+      // isSubmitSuccessfuly
+    },
   } = methods;
 
   const onSubmit = async (data) => {

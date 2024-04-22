@@ -1,4 +1,5 @@
-import React, { useCallback } from "react";
+import React from "react";
+// import React, { useCallback } from "react";
 import * as Yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -27,36 +28,40 @@ const ProfileForm = () => {
 
   const {
     reset,
-    watch,
-    control,
-    setValue,
+    // watch,
+    // control,
+    // setValue,
     setError,
     handleSubmit,
-    formState: { errors, isSubmitting, isSubmitSuccessfuly },
+    formState: {
+      errors,
+      // isSubmitting,
+      // isSubmitSuccessfuly
+    },
   } = methods;
 
   //  here watch function is used to get the all values from form
-  const values = watch();
+  // const values = watch();
 
-  const handleDrop = useCallback(
-    (acceptedFiles) => {
-      const file = acceptedFiles[0];
-      const newFile = Object.assign(file, {
-        preview: URL.createObjectURL(file),
-      });
-      if (file) {
-        setValue("avatarUrl", newFile, { shouldValidate: true });
-      }
-    },
-    [setValue]
-  );
+  // const handleDrop = useCallback(
+  //   (acceptedFiles) => {
+  //     const file = acceptedFiles[0];
+  //     const newFile = Object.assign(file, {
+  //       preview: URL.createObjectURL(file),
+  //     });
+  //     if (file) {
+  //       setValue("avatarUrl", newFile, { shouldValidate: true });
+  //     }
+  //   },
+  //   [setValue]
+  // );
 
   const onSubmit = async (data) => {
     try {
       // submit data to backend
-      console.log("DATA", data);
+      // console.log("DATA", data);
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       reset();
       setError("after submitting form", {
         ...error,

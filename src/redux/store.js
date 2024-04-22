@@ -1,16 +1,19 @@
-import { configureStore, isImmutableDefault } from "@reduxjs/toolkit"
-import { useDispatch as useAppDispatch, useSelector as useAppSelector } from "react-redux";
+import { configureStore } from "@reduxjs/toolkit";
+import {
+  useDispatch as useAppDispatch,
+  useSelector as useAppSelector,
+} from "react-redux";
 import { persistStore, persistReducer } from "redux-persist";
-import { rootPersistConfig, rootReducer } from "./rootReducer"
+import { rootPersistConfig, rootReducer } from "./rootReducer";
 
 const store = configureStore({
-    reducer: persistReducer(rootPersistConfig, rootReducer),
-    middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware({
-            immutableCheck: false,
-            serializeableCheck: false,
-        })
-})
+  reducer: persistReducer(rootPersistConfig, rootReducer),
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      immutableCheck: false,
+      serializeableCheck: false,
+    }),
+});
 
 const persistor = persistStore(store);
 
@@ -20,4 +23,4 @@ const useSelector = useAppSelector;
 
 const useDispatch = () => useAppDispatch();
 
-export { store, persistor, dispatch, useSelector, useDispatch }
+export { store, persistor, dispatch, useSelector, useDispatch };

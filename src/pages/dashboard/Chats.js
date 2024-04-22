@@ -25,10 +25,12 @@ import {
 } from "../../components/Search";
 import Friends from "../../sections/main/Friends";
 import { socket } from "../../socket";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { FetchDirectConversation } from "../../redux/slices/conversation";
 
 const Chats = () => {
   const theme = useTheme();
+  const dispatch = useDispatch();
   const user_id = window.localStorage.getItem("user_id");
   const { direct_chat } = useSelector((state) => state.conversation);
   const [openDialogBox, setOpenDialogBox] = useState(false);
@@ -40,12 +42,12 @@ const Chats = () => {
   }; // to close the dilog box of users.
 
   useEffect(() => {
-    socket.emit("user:get_all_conversation", { user_id }, (data) => {
+    socket.emit("chat:get_all_conversation", { user_id }, (data) => {
       // data => list of conversations
-      console.log(data);
+      dispatch(FetchDirectConversation({ conversations: data }));
     });
     // eslint-disable-next-line
-  }, []);
+  }, [socket]);
 
   return (
     <>

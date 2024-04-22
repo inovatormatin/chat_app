@@ -28,7 +28,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const CreateGroupForm = ({handleClose}) => {
+const CreateGroupForm = ({ handleClose }) => {
   const NewGroupSchema = Yup.object().shape({
     title: Yup.string().required("Title is required."),
     members: Yup.array().min(2, "Must have at least two members."),
@@ -45,17 +45,22 @@ const CreateGroupForm = ({handleClose}) => {
   });
 
   const {
-    reset,
-    watch,
-    setError,
+    // reset,
+    // watch,
+    // setError,
     handleSubmit,
-    formState: { errors, isSubmitting, isSubmitSuccessfuly, isValid },
+    formState: {
+      errors,
+      // isSubmitting,
+      // isSubmitSuccessfuly,
+      // isValid
+    },
   } = methods;
 
   const onSubmit = async (data) => {
     try {
       // submit data to backend
-      console.log("DATA", data);
+      // console.log("DATA", data);
     } catch (error) {
       console.log(error);
     }
@@ -76,13 +81,18 @@ const CreateGroupForm = ({handleClose}) => {
           options={MEMBERS.map((option) => option)}
           ChipProps={{ size: "medium" }}
         />
-        <Stack spacing={2} direction='row' alignItems='center' justifyContent='end'>
-            <Button type="submit" variant="outlined" onClick={handleClose}>
-                Cancel
-            </Button>
-            <Button type="submit" variant="contained">
-                Create
-            </Button>
+        <Stack
+          spacing={2}
+          direction="row"
+          alignItems="center"
+          justifyContent="end"
+        >
+          <Button type="submit" variant="outlined" onClick={handleClose}>
+            Cancel
+          </Button>
+          <Button type="submit" variant="contained">
+            Create
+          </Button>
         </Stack>
       </Stack>
     </FormProvider>
@@ -104,7 +114,7 @@ const CreateGroup = ({ open, handleClose }) => {
       <DialogTitle mb={2}>Create new Group.</DialogTitle>
       {/* Content */}
       <DialogContent>
-        <CreateGroupForm handleClose={handleClose}/>
+        <CreateGroupForm handleClose={handleClose} />
       </DialogContent>
     </Dialog>
   );

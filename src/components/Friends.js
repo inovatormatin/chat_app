@@ -11,6 +11,12 @@ import { useTheme, styled } from "@mui/material/styles";
 import StyledBadge from "./StyledBadge";
 import { socket } from "../socket";
 import { Chat } from "phosphor-react";
+import {
+  FetchDirectConversation,
+  UpdateChatRoom,
+} from "../redux/slices/conversation";
+import { useDispatch } from "react-redux";
+import { SelectConversation } from "../redux/slices/app";
 
 const StyledChatBox = styled(Box)(({ theme }) => ({
   "&:hover": {
@@ -129,13 +135,52 @@ const FriendComponent = ({
   firstName,
   lastName,
   _id,
-  online,
+  status,
   img,
   handleClose,
 }) => {
   const theme = useTheme();
   const user_id = window.localStorage.getItem("user_id");
+  const dispatch = useDispatch();
   const name = `${firstName} ${lastName}`;
+
+  // start Conversation Handler
+  const startConversation = () => {
+    // start new conv.
+    socket.emit(
+      "chat:get_OTO_room_id",
+      {
+        client_id: user_id,
+        friend_id: _id,
+      },
+      (res) => {
+        socket.emit("chat:get_all_conversation", { user_id }, (data) => {
+          // data => list of conversations
+          dispatch(FetchDirectConversation({ conversations: data }));
+          // set current convo.
+          dispatch(
+            SelectConversation({
+              room_id: res._id,
+              room_type: "individual",
+            })
+          );
+        });
+        socket.emit(
+          "chat:get_OTO_chat_history",
+          { client_id: user_id, room_id: res._id },
+          (data) => {
+            dispatch(
+              UpdateChatRoom({
+                current_convesation: data.conversation,
+                friend: data.friend,
+              })
+            );
+          }
+        );
+      }
+    );
+    handleClose();
+  };
   return (
     <StyledChatBox
       sx={{
@@ -152,7 +197,7 @@ const FriendComponent = ({
       >
         <Stack direction={"row"} spacing={2} alignItems="center">
           {/* Person Image */}
-          {online ? (
+          {status === "Online" ? (
             <StyledBadge
               overlap="circular"
               anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
@@ -171,13 +216,7 @@ const FriendComponent = ({
         </Stack>
         {/* Time and msg count */}
         <Stack direction="row" spacing={2} alignItems={"center"}>
-          <IconButton
-            onClick={() => {
-              // start new conv.
-              socket.emit("start_conversation", { to: _id, from: user_id });
-              handleClose();
-            }}
-          >
+          <IconButton onClick={() => startConversation()}>
             <Chat />
           </IconButton>
         </Stack>
@@ -186,7 +225,7 @@ const FriendComponent = ({
   );
 };
 
-const RequestComponent = ({ firstName, lastName, _id, online, img }) => {
+const RequestComponent = ({ firstName, lastName, _id, status, img }) => {
   const theme = useTheme();
   const name = `${firstName} ${lastName}`;
   const user_id = window.localStorage.getItem("user_id");
@@ -206,7 +245,7 @@ const RequestComponent = ({ firstName, lastName, _id, online, img }) => {
       >
         <Stack direction={"row"} spacing={2} alignItems="center">
           {/* Person Image */}
-          {online === "Online" ? (
+          {status === "Online" ? (
             <StyledBadge
               overlap="circular"
               anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
