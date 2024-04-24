@@ -252,7 +252,6 @@ export const VerifyOTP = (formValues) => {
     await axios
       .post("/auth/verify-otp", { ...data }, config)
       .then((response) => {
-        console.log(response);
         dispatch(
           slice.actions.updateIsLoading({ isLoading: false, error: false })
         );

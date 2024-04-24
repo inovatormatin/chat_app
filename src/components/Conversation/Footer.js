@@ -21,6 +21,12 @@ import {
 import { styled, useTheme } from "@mui/material/styles";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
+import { useDispatch, useSelector } from "react-redux";
+import { socket } from "../../socket";
+import {
+  LastMessageByFriend,
+  UpdateDirectConversation,
+} from "../../redux/slices/conversation";
 
 const Actions = [
   {
@@ -64,13 +70,26 @@ const StyledInput = styled(TextField)(({ theme }) => ({
   },
 }));
 
-const ChatInput = ({ setOpenPicker }) => {
+const ChatInput = ({
+  setOpenPicker,
+  userInput,
+  setUserInput,
+  sendMessageHandler,
+}) => {
   const [openActions, setOpenActions] = useState(false);
   return (
     <StyledInput
       fullWidth
       placeholder="Write message ..."
       variant="filled"
+      value={userInput}
+      onChange={(e) => setUserInput(e.target.value)}
+      onFocus={() => setOpenPicker(false)}
+      onKeyDown={(e) => {
+        if (e.code === "Enter") {
+          sendMessageHandler();
+        }
+      }}
       InputProps={{
         disableUnderline: true,
         startAdornment: (
@@ -132,6 +151,27 @@ const ChatInput = ({ setOpenPicker }) => {
 const Footer = () => {
   const theme = useTheme();
   const [openPicker, setOpenPicker] = useState(false);
+  const [userInput, setUserInput] = useState("");
+  const user_id = window.localStorage.getItem("user_id");
+  const { friend } = useSelector((state) => state.conversation.direct_chat);
+  const { room_id } = useSelector((state) => state.app);
+  const dispatch = useDispatch();
+  // To send message
+  const sendMessageHandler = () => {
+    if (userInput !== "") {
+      // { client_id, room_id, msg }
+      let msg = {
+        to: friend._id,
+        from: user_id,
+        type: "Text", // "Text", "Media", "Document", "Link"
+        text: userInput,
+      };
+      socket.emit("chat:send_OTO_msg", { client_id: user_id, room_id, msg }); // emit the event.
+      dispatch(UpdateDirectConversation(room_id, msg));
+      dispatch(LastMessageByFriend(room_id, msg));
+      setUserInput("");
+    }
+  };
   return (
     <Box
       sx={{
@@ -159,10 +199,15 @@ const Footer = () => {
             <Picker
               theme={theme.palette.mode}
               data={data}
-              onEmojiSelect={console.log}
+              onEmojiSelect={(e) => setUserInput(userInput + e.native)}
             />
           </Box>
-          <ChatInput setOpenPicker={setOpenPicker} />
+          <ChatInput
+            setOpenPicker={setOpenPicker}
+            userInput={userInput}
+            setUserInput={setUserInput}
+            sendMessageHandler={sendMessageHandler}
+          />
         </Stack>
         <Box
           height={48}
@@ -177,7 +222,7 @@ const Footer = () => {
             justifyContent={"center"}
             sx={{ width: "100%", height: "100%" }}
           >
-            <IconButton>
+            <IconButton onClick={() => sendMessageHandler()}>
               <PaperPlaneTilt color="#fff" />
             </IconButton>
           </Stack>

@@ -17,7 +17,6 @@ const slice = createSlice({
   reducers: {
     fetchDirectConversation(state, action) {
       const user_id = window.localStorage.getItem("user_id");
-      console.log(action.payload.conversations);
       const list = action.payload.conversations.map((el) => {
         const this_user = el.participants.find(
           (elm) => elm._id.toString() !== user_id
@@ -47,32 +46,13 @@ const slice = createSlice({
       state.direct_chat.convesations = action.payload.direct_conversation;
     },
     updateDirectConversation(state, action) {
-      const user_id = window.localStorage.getItem("user_id");
-      const this_conversation = action.payload.convesations;
-      state.direct_chat.convesations = state.direct_chat.convesations.map(
-        (el) => {
-          if (el.id !== this_conversation._id) {
-            // console.log("1. ----->", { this_conversation, el });
-            return el;
-          } else {
-            const user = this_conversation.participants.find(
-              (elm) => elm._id.toString() !== user_id
-            );
-            // console.log("2. ----->", { this_conversation, user });
-            return {
-              id: this_conversation._id,
-              user_id: user._id,
-              name: `${user.firstName} ${user.lastName}`,
-              online: user.status === "Online",
-              img: faker.image.avatar(),
-              msg: faker.music.songName(),
-              time: "9:36",
-              unread: 0,
-              pinned: false,
-            };
-          }
-        }
-      );
+      state.direct_chat.current_convesation = [
+        ...state.direct_chat.current_convesation,
+        action.payload.msg,
+      ];
+    },
+    updateLastMessage(state, action) {
+      state.direct_chat.convesations = action.payload.conversations;
     },
     addDirectConversation(state, action) {
       const user_id = window.localStorage.getItem("user_id");
@@ -80,7 +60,6 @@ const slice = createSlice({
       const user = this_conversation.participants.find(
         (elm) => elm._id.toString() !== user_id
       );
-      // console.log("here ----->", { this_conversation, user, user_id });
 
       state.direct_chat.convesations.push({
         id: this_conversation._id,
@@ -113,8 +92,6 @@ export const FetchDirectConversation = ({ conversations }) => {
 // set Chat room data
 export const UpdateChatRoom = ({ current_convesation, friend }) => {
   return async (dispatch, getState) => {
-    console.log(getState().conversation.direct_chat.convesations);
-    console.log(friend);
     let direct_conversation = getState().conversation.direct_chat.convesations;
     direct_conversation = direct_conversation.map((user) =>
       user.user_id === friend._id
@@ -131,12 +108,60 @@ export const UpdateChatRoom = ({ current_convesation, friend }) => {
   };
 };
 
-// UpdateDirectConversation
-export const UpdateDirectConversation = ({ convesations }) => {
+// Update direct conversation
+export const UpdateDirectConversation = (chat_room_id, msg) => {
   return async (dispatch, getState) => {
-    dispatch(slice.actions.updateDirectConversation({ convesations }));
+    const room_id = getState().app.room_id;
+    if (room_id.toString() === chat_room_id.toString()) {
+      dispatch(
+        slice.actions.updateDirectConversation({
+          msg,
+        })
+      );
+    }
   };
 };
+
+// Update last message
+export const LastMessageByFriend = (chat_room_id, msg) => {
+  return async (dispatch, getState) => {
+    let conversations = [...getState().conversation.direct_chat.convesations]; // get previous chat history.
+    let is_conversations_exists = conversations.find(
+      (chat) => chat.id === chat_room_id
+    ); // find id there is already a chat exisit or not.
+    if (is_conversations_exists !== undefined) {
+      conversations = conversations.map((chat) =>
+        chat.id === chat_room_id
+          ? { ...chat, time: formatTime(Date.now()), msg: msg.text }
+          : chat
+      );
+      dispatch(
+        slice.actions.updateLastMessage({
+          conversations,
+        })
+      );
+    } else {
+      dispatch(
+        slice.actions.updateLastMessage({
+          conversations: [
+            {
+              id: chat_room_id,
+              user_id: msg._id,
+              name: `${msg.from.firstName} ${msg.from.lastName}`,
+              online: msg.status === "Online",
+              img: faker.image.avatar(),
+              msg: msg.text,
+              time: formatTime(Date.now()),
+              unread: 0,
+              pinned: false,
+            },
+          ],
+        })
+      );
+    }
+  };
+};
+
 // AddDirectConversation
 export const AddDirectConversation = ({ convesations }) => {
   return async (dispatch, getState) => {

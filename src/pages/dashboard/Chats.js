@@ -26,7 +26,11 @@ import {
 import Friends from "../../sections/main/Friends";
 import { socket } from "../../socket";
 import { useDispatch, useSelector } from "react-redux";
-import { FetchDirectConversation } from "../../redux/slices/conversation";
+import {
+  FetchDirectConversation,
+  LastMessageByFriend,
+  UpdateDirectConversation,
+} from "../../redux/slices/conversation";
 
 const Chats = () => {
   const theme = useTheme();
@@ -46,6 +50,20 @@ const Chats = () => {
       // data => list of conversations
       dispatch(FetchDirectConversation({ conversations: data }));
     });
+    // New message sent
+    socket.on("chat:new_OTO_msg_sent", (data) => {
+      console.log("new_OTO_msg_sent", data);
+    });
+    // New message recived
+    socket.on("chat:new_OTO_msg_recieved", (data) => {
+      console.log("new_OTO_msg_recieved", data);
+      dispatch(UpdateDirectConversation(data.room_id, data.msg));
+      dispatch(LastMessageByFriend(data.room_id, data.msg));
+    });
+    return () => {
+      socket?.off("chat:new_OTO_msg_sent");
+      socket?.off("chat:new_OTO_msg_recieved");
+    };
     // eslint-disable-next-line
   }, [socket]);
 

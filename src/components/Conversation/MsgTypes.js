@@ -32,28 +32,31 @@ const TimeLine = ({ el }) => {
 
 const TextMsg = ({ el, menu }) => {
   const theme = useTheme();
+  const user_id = window.localStorage.getItem("user_id").toString();
   return (
-    <Stack direction={"row"} justifyContent={el.incoming ? "start" : "end"}>
+    <Stack
+      direction={"row"}
+      justifyContent={el.to === user_id ? "start" : "end"}
+    >
       <Box
         p={1.5}
         sx={{
-          backgroundColor: el.incoming
-            ? theme.palette.background.paper
-            : theme.palette.primary.main,
+          backgroundColor:
+            el.to === user_id
+              ? theme.palette.background.paper
+              : theme.palette.primary.main,
           borderRadius: 1.5,
           width: "max-content",
         }}
       >
         <Typography
           variant="body2"
-          color={el.incoming ? theme.palette.text : "#fff"}
+          color={el.to === user_id ? theme.palette.text : "#fff"}
         >
-          {el.message}
+          {el.text}
         </Typography>
       </Box>
-      {menu &&
-        <MessageOptions />
-      }
+      {menu && <MessageOptions />}
     </Stack>
   );
 };
@@ -86,9 +89,7 @@ const MediaMsg = ({ el, menu }) => {
           </Typography>
         </Stack>
       </Box>
-      {menu &&
-        <MessageOptions />
-      }
+      {menu && <MessageOptions />}
     </Stack>
   );
 };
@@ -130,9 +131,7 @@ const ReplyMsg = ({ el, menu }) => {
           </Typography>
         </Stack>
       </Box>
-      {menu &&
-        <MessageOptions />
-      }
+      {menu && <MessageOptions />}
     </Stack>
   );
 };
@@ -185,9 +184,7 @@ const LinkMsg = ({ el, menu }) => {
           </Typography>
         </Stack>
       </Box>
-      {menu &&
-        <MessageOptions />
-      }
+      {menu && <MessageOptions />}
     </Stack>
   );
 };
@@ -231,9 +228,7 @@ const DocMsg = ({ el, menu }) => {
           </Typography>
         </Stack>
       </Box>
-      {menu &&
-        <MessageOptions />
-      }
+      {menu && <MessageOptions />}
     </Stack>
   );
 };
